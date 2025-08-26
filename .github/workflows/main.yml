@@ -34,3 +34,13 @@ jobs:
           echo "Test failed: expected output to contain 'Hello'"
           exit 1
         fi
+        
+  release:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download build artifact
+        uses: actions/download-artifact@v5
+        with:
+          name: setup-zip
+          path: dist

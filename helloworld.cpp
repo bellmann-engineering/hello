@@ -1,12 +1,12 @@
 #include <iostream>
 
 void sayhello() {
-    std::cout << "Hallo" << std::endl;
+    std::cout << "H" << std::endl;
 }
 
 int main() {
     sayhello();
 
-    std::cout << "Hello World...." << std::endl;
+    std::cout << "...." << std::endl;
     return 0;
 }
