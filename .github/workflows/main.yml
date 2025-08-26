@@ -60,3 +60,15 @@ jobs:
         with:
           name: setup-zip
           path: dist
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: v1.0.${{ github.run_number }}
+          name: Release v1.0.${{ github.run_number }}
+          files: dist/setup.zip
+          draft: false
+          prerelease: false
+
