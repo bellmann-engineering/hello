@@ -34,6 +34,21 @@ jobs:
           echo "Test failed: expected output to contain 'Hello'"
           exit 1
         fi
+    
+    - name: Package artifact
+      run: |
+        mkdir -p dist
+        cp HelloWorld dist/
+        cd dist && zip -r ../setup.zip .
+        ls -l ..  # debug
+    
+    - name: Upload artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: setup-zip
+        path: setup.zip
+        if-no-files-found: error
+        retention-days: 7
         
   release:
     needs: build
