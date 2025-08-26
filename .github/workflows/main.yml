@@ -24,3 +24,12 @@ jobs:
 
     - name: Run the application
       run: ./HelloWorld
+
+    - name: Run tests
+      run: |
+        # Example test: check output contains "Hello"
+        output=$(./HelloWorld)
+        if [[ "$output" != *"Hello"* ]]; then
+          echo "Test failed: expected output to contain 'Hello'"
+          exit 1
+        fi
