@@ -1,6 +1,7 @@
 name: C++ CI/CD
 
 on:
+  workflow_dispatch:
   # push:
   #   branches:
   #     - main
@@ -25,6 +26,15 @@ jobs:
     - name: Run the application
       run: ./HelloWorld
 
+    - name: Run tests
+      run: |
+        # Example test: check output contains "Hello"
+        output=$(./HelloWorld)
+        if [[ "$output" != *"Hello"* ]]; then
+          echo "Test failed: expected output to contain 'Hello'"
+          exit 1
+        fi
+        
   release:
     needs: build
     runs-on: ubuntu-latest
