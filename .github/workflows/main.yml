@@ -1,6 +1,10 @@
 name: C++ CI/CD
 
+permissions:
+  contents: write
+  
 on:
+  workflow_dispatch:
   # push:
   #   branches:
   #     - main
@@ -24,3 +28,50 @@ jobs:
 
     - name: Run the application
       run: ./HelloWorld
+
+    - name: Run tests
+      run: |
+        # Example test: check output contains "Hello"
+        output=$(./HelloWorld)
+        if [[ "$output" != *"Hello"* ]]; then
+          echo "Test failed: expected output to contain 'Hello'"
+          exit 1
+        fi
+    
+    - name: Package artifact
+      run: |
+        mkdir -p dist
+        cp HelloWorld dist/
+        cd dist && zip -r ../setup.zip .
+        ls -l ..  # debug
+    
+    - name: Upload artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: setup-zip
+        path: setup.zip
+        if-no-files-found: error
+        retention-days: 7
+        
+  release:
+    needs: build
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Download build artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: setup-zip
+          path: dist
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: v1.0.${{ github.run_number }}
+          name: Release v1.0.${{ github.run_number }}
+          files: dist/setup.zip
+          draft: false
+          prerelease: false
+
